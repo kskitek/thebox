@@ -1,0 +1,38 @@
+input,button,#error {
+   font-size: 7vw;
+}
+
+body {
+  display: grid;
+  justify-content: center;
+  align-content: center;
+}
+
+#pane {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  flex-direction: column;
+  align-content: stretch;
+  row-gap: 0.4em;
+  padding: 2em;
+  background: lightgray;
+  border-radius: 6px;
+}
+
+.digits {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 0.2em;
+}
+
+.digit {
+}
+
+.invalid {
+  background: hsl(1deg 100% 91%);
+}
+
+#error {
+  display: none;
+}

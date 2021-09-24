@@ -28,9 +28,16 @@ func main() {
 }
 
 func testHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodOptions {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, magic-cookie")
+		return
+	}
+
 	cookie := r.Header.Get("magic-cookie")
 	if cookie == "" || cookie != getMagicCookie() {
-		log.Println("bad cookie")
+		log.Println("bad cookie: " + cookie)
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}

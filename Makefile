@@ -10,7 +10,7 @@ build-web:
 	go build -o web cmd/web/main.go
 
 build-box:
-	go build GOARCH=arm64 GOOS=linux -o box cmd/box/main.go
+	GOARM=6 GOARCH=arm64 GOOS=linux go build -o box cmd/box/main.go
 
 docker-build:
 	docker build -t $(IMAGE) .
