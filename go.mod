@@ -5,6 +5,7 @@ go 1.17
 require (
 	cloud.google.com/go/pubsub v1.17.0
 	gobot.io/x/gobot v1.15.0
+	google.golang.org/genproto v0.0.0-20210824181836-a4879c3d0e89
 )
 
 require (
@@ -28,7 +29,6 @@ require (
 	golang.org/x/text v0.3.6 // indirect
 	google.golang.org/api v0.54.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/genproto v0.0.0-20210824181836-a4879c3d0e89 // indirect
 	google.golang.org/grpc v1.40.0 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 	periph.io/x/periph v3.6.2+incompatible // indirect

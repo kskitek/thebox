@@ -1,38 +1,28 @@
 package main
 
 import (
-	"time"
+	"context"
+	"log"
 
-	"gobot.io/x/gobot/drivers/gpio"
-	"gobot.io/x/gobot/platforms/raspi"
+	"github.com/kskitek/thebox/internal/pubsub"
 )
 
 func main() {
-	pin := "1"
-	r := raspi.NewAdaptor()
-	servo := gpio.NewServoDriver(r, pin)
-
-	err := servo.Start()
+	// servo := servo.New()
+	sub, err := pubsub.NewSubscriber()
 	if err != nil {
 		panic(err)
 	}
 
-	err = servo.Max()
-	if err != nil {
-		panic(err)
-	}
+	ch := make(chan pubsub.Message)
+	go func() {
+		err = sub.Subscribe(context.Background(), ch)
+		if err != nil {
+			panic(err)
+		}
+	}()
 
-	time.Sleep(time.Second * 2)
-
-	err = servo.Min()
-	if err != nil {
-		panic(err)
-	}
-
-	time.Sleep(time.Second * 2)
-
-	err = servo.Center()
-	if err != nil {
-		panic(err)
+	for msg := range ch {
+		log.Println(msg)
 	}
 }

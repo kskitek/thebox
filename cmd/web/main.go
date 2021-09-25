@@ -9,7 +9,8 @@ import (
 	"net/http"
 	"os"
 
-	"cloud.google.com/go/pubsub"
+	// "cloud.google.com/go/pubsub"
+	"github.com/kskitek/thebox/internal/pubsub"
 )
 
 const defaultPort = "8080"
@@ -82,22 +83,15 @@ func testHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func changeBoxState(ctx context.Context, open bool) error {
-	log.Printf("changing box state %t\n", open)
-	client, err := pubsub.NewClient(ctx, os.Getenv("GOOGLE_CLOUD_PROJECT"))
+	pub, err := pubsub.NewPublisher()
 	if err != nil {
 		return err
 	}
-	defer client.Close()
-
-	payload := "openpls"
-	if !open {
-		payload = "close"
+	msg := pubsub.MessageClose
+	if open {
+		msg = pubsub.MessageOpen
 	}
-	topic := client.Topic(os.Getenv("TOPIC"))
-	msg := &pubsub.Message{Data: []byte(payload)}
-	_, err = topic.Publish(ctx, msg).Get(ctx)
-	return err
-
+	return pub.Publish(ctx, msg)
 }
 
 func getPort() string {
