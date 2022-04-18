@@ -5,47 +5,48 @@ import (
 	"log"
 	"time"
 
-	"gobot.io/x/gobot/drivers/gpio"
-	"gobot.io/x/gobot/platforms/raspi"
+	"github.com/stianeikeland/go-rpio/v4"
+)
+
+const (
+	defaultPin = 19 // PWM1
 )
 
 func New() Servo {
-	return Servo{}
+	err := rpio.Open()
+	if err != nil {
+		panic(err)
+	}
+
+	pwm := rpio.Pin(defaultPin)
+	pwm.Mode(rpio.Pwm)
+	rpio.SetFreq(pwm, 50*100)
+
+	return Servo{
+		pwm: pwm,
+	}
 }
 
 type Servo struct {
+	pwm rpio.Pin
 }
 
-func (s Servo) Open(ctx context.Context) {
+func (s Servo) OpenDoors(ctx context.Context) {
 	log.Println("openning")
+	time.Sleep(time.Second / 2)
+	s.pwm.DutyCycle(9, 100)
 
-	pin := "1"
-	r := raspi.NewAdaptor()
-	servo := gpio.NewServoDriver(r, pin)
+}
 
-	err := servo.Start()
-	if err != nil {
-		panic(err)
-	}
-
-	err = servo.Max()
-	if err != nil {
-		panic(err)
-	}
-
-	time.Sleep(time.Second * 2)
-
-	err = servo.Min()
-	if err != nil {
-		panic(err)
-	}
-
-	err = servo.Center()
-	if err != nil {
-		panic(err)
-	}
+func (s Servo) CloseDoors(ctx context.Context) {
+	log.Println("closing")
+	time.Sleep(time.Second / 2)
+	s.pwm.DutyCycle(3, 100)
 }
 
 func (s Servo) Close(ctx context.Context) {
-	log.Println("closing")
+	s.pwm.DutyCycle(3, 100)
+	time.Sleep(time.Second / 2)
+	s.pwm.Mode(rpio.Input)
+	rpio.Close()
 }

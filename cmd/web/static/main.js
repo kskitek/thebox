@@ -53,7 +53,13 @@ function sendCode(code) {
   });
 
   resp
-    .then(r => r.json())
+    .then(r => {
+        if (r.status != 200) {
+          console.error(err);
+          showError(true);
+        }
+        return r;
+    })
     .then(d => console.log(d))
     .catch(err => {
       console.error(err);

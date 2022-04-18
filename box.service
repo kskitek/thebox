@@ -1,0 +1,13 @@
+ [Unit]
+ Description=The box service
+ After=multi-user.target
+
+ [Service]
+ Type=idle
+ ExecStart=/home/pi/run.sh
+ Restart=always
+ User=root
+ Group=root
+
+ [Install]
+ WantedBy=multi-user.target
